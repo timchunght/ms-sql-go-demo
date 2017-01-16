@@ -26,7 +26,7 @@ func main() {
 	db, err := gorm.Open("mssql", dbConnectionStr)
 	defer db.Close()
 	if err != nil {
-		log.log(err)
+		log.Fatal(err)
 		return
 	}
 
