@@ -17,11 +17,13 @@ type TheatreWaitingList struct {
 
 func main() {
 
-	user := os.Getenv("MS_USER")
-	host := os.Getenv("MS_HOST")
-	password := os.Getenv("MS_PASSWORD")
-	dbName := os.Getenv("MS_DB")
-	dbConnectionStr := fmt.Sprintf("host=%s user=%s dbname=%s sslmode=disable password=%s", host, user, dbName, password)
+	USER := os.Getenv("MS_USER")
+	SERVER := os.Getenv("MS_SERVER")
+	PORT := os.Getenv("MS_PORT")
+	PASSWORD := os.Getenv("MS_PASSWORD")
+	DB_NAME := os.Getenv("MS_DB")
+
+	dbConnectionStr := fmt.Sprintf("server=%s;database=%s;user id=%s;password=%s;port=%s", SERVER, DB_NAME, USER, PASSWORD, PORT)
 	log.Println("dbConnectionStr: ", dbConnectionStr)
 	db, err := gorm.Open("mssql", dbConnectionStr)
 	defer db.Close()
