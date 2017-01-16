@@ -42,7 +42,7 @@ func main() {
 	}
 
 	for rows.Next() {
-		var twl TheatreWaitingList
+		var twl map[string]interface{}
 		db.ScanRows(rows, &twl)
 		log.Println(twl)
 		// do something
