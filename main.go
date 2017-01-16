@@ -9,9 +9,9 @@ import (
 )
 
 type TheatreWaitingList struct {
-	ID                        int    `bson:"specialId" gorm:"ID"`
-	StatusID                  int    `bson:"" gorm:"STATUS_ID"`
-	OfferedOutcomeDescription string `gorm:"OFFERED_OUTCOME_DESCRIPTION"`
+	ID                        int    `gorm:"column:ID"`
+	StatusID                  int    `gorm:"column:STATUS_ID"`
+	OfferedOutcomeDescription string `gorm:"column:OFFERED_OUTCOME_DESCRIPTION"`
 }
 
 func main() {
@@ -42,12 +42,9 @@ func main() {
 	}
 
 	for rows.Next() {
-		// var twl TheatreWaitingList
-		var id int
-		var offerId string
-		rows.Scan(&id, &offerId)
-		log.Println("id: ", id)
-		log.Println("offerId: ", offerId)
+		var twl TheatreWaitingList
+		db.ScanRows(rows, &twl)
+		log.Println(twl)
 		// do something
 	}
 
