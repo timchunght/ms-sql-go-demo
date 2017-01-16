@@ -9,7 +9,6 @@ import (
 )
 
 type TheatreWaitingList struct {
-	gorm.Model
 	ID                        int    `gorm:"ID"`
 	StatusID                  int    `gorm:"STATUS_ID"`
 	OfferedOutcomeDescription string `gorm:"OFFERED_OUTCOME_DESCRIPTION"`
@@ -28,11 +27,20 @@ func main() {
 	db, err := gorm.Open("mssql", dbConnectionStr)
 	defer db.Close()
 	if err != nil {
+		log.Println("DB Connection Error ")
 		log.Fatal(err)
 		return
 	}
 
-	rows, err := db.Model(&TheatreWaitingList{}).Raw("SELECT TOP 10 * FROM dbo.TheatreWaitingList").Rows() // (*sql.Rows, error)
+	rows, err := db.Raw("SELECT TOP 10 * FROM dbo.TheatreWaitingList").Rows() // (*sql.Rows, error)
+	defer rows.Close()
+
+	if err != nil {
+		log.Println("Query error")
+		log.Fatal(err)
+		return
+	}
+
 	for rows.Next() {
 		var twl TheatreWaitingList
 		db.ScanRows(rows, &twl)
