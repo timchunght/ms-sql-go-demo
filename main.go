@@ -24,8 +24,10 @@ func main() {
 	dbConnectionStr := fmt.Sprintf("host=%s user=%s dbname=%s sslmode=disable password=%s", host, user, dbName, password)
 	log.Println("dbConnectionStr: ", dbConnectionStr)
 	db, err := gorm.Open("mssql", dbConnectionStr)
+	defer db.Close()
 	if err != nil {
-		log.Println(err)
+		log.log(err)
+		return
 	}
 
 	rows, err := db.Model(&TheatreWaitingList{}).Raw("SELECT TOP 10 * FROM dbo.TheatreWaitingList").Rows() // (*sql.Rows, error)
@@ -35,7 +37,5 @@ func main() {
 		log.Println(twl)
 		// do something
 	}
-
-	defer db.Close()
 
 }
