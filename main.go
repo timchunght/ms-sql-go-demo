@@ -44,13 +44,21 @@ func main() {
 	}
 
 	for rows.Next() {
-		var twl map[string]interface{}
+		var twl TheatreWaitingList
 		db.ScanRows(rows, &twl)
 		log.Println(twl)
+		rowMap, err := parser.NewS(rows, nil)
+		if err != nil {
+			log.Fatal(err)
+			return
+		}
+
+		objectMap := rowMap.Map()
+		log.Println("objectMap: ", objectMap)
 		// do something
 	}
 
-	RowToMap()
+	// RowToMap()
 
 }
 
