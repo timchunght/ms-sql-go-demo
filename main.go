@@ -53,6 +53,7 @@ func main() {
 			return
 		}
 
+		rowMap.Scan()
 		objectMap := rowMap.Map()
 		log.Println("objectMap: ", objectMap)
 		// do something
