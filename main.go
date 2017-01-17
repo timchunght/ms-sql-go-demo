@@ -1,10 +1,12 @@
 package main
 
 import (
+	"database/sql"
 	"fmt"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mssql"
 	"log"
+	"ms-sql-demo/parser"
 	"os"
 )
 
@@ -48,4 +50,42 @@ func main() {
 		// do something
 	}
 
+	RowToMap()
+
+}
+
+func RowToMap() {
+	USER := os.Getenv("MS_USER")
+	SERVER := os.Getenv("MS_SERVER")
+	PORT := os.Getenv("MS_PORT")
+	PASSWORD := os.Getenv("MS_PASSWORD")
+	DB_NAME := os.Getenv("MS_DB")
+	connString := fmt.Sprintf("server=%s;database=%s;user id=%s;password=%s;port=%s", SERVER, DB_NAME, USER, PASSWORD, PORT)
+	log.Println("connString: ", connString)
+
+	db, err := sql.Open("mssql", connString)
+	if err != nil {
+		log.Fatal("Open connection failed:", err.Error())
+	}
+	defer db.Close()
+	rows, err := db.Query("SELECT TOP 10 * FROM dbo.TheatreWaitingList")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer rows.Close()
+	for rows.Next() {
+		rowMap, err := parser.NewS(rows, nil)
+		if err != nil {
+			log.Fatal(err)
+			return
+		}
+
+		objectMap := rowMap.Map()
+		log.Println(objectMap)
+
+	}
+	err = rows.Err()
+	if err != nil {
+		log.Fatal(err)
+	}
 }
